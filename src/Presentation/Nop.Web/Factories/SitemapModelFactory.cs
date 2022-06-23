@@ -486,10 +486,10 @@ namespace Nop.Web.Factories
         /// This will build an XML sitemap for better index with search engines.
         /// See http://en.wikipedia.org/wiki/Sitemaps for more information.
         /// </summary>
-        /// <param name="stream">Stream</param>
+        /// <param name="fullPath">The path and name of the sitemap file</param>
         /// <param name="id">Sitemap identifier</param>
         /// <returns>A task that represents the asynchronous operation</returns>
-        protected virtual async Task GenerateAsync(MemoryStream stream, int id = 0)
+        protected virtual async Task GenerateAsync(string fullPath, int id = 0)
         {
             //generate all URLs for the sitemap
             var sitemapUrls = await GenerateUrlsAsync();
@@ -504,6 +504,8 @@ namespace Nop.Web.Factories
 
             if (!sitemaps.Any())
                 return;
+
+            await using var stream = new MemoryStream();
 
             if (id > 0)
             {
@@ -528,6 +530,10 @@ namespace Nop.Web.Factories
                     await WriteSitemapAsync(stream, sitemaps.First());
                 }
             }
+
+            using var fileStream = _nopFileProvider.GetOfCreateFile(fullPath);
+            stream.Position = 0;
+            await stream.CopyToAsync(fileStream, 81920);
         }
 
         #endregion
@@ -757,21 +763,14 @@ namespace Nop.Web.Factories
             var fileName = string.Format(NopSeoDefaults.SitemapXmlFilePattern, store.Id, language.Id, id);
             var fullPath = _nopFileProvider.GetAbsolutePath(NopSeoDefaults.SitemapXmlDirectory, fileName);
 
-            if (_nopFileProvider.FileExists(fullPath) && _nopFileProvider.GetLastWriteTimeUtc(fullPath) > DateTime.UtcNow.AddDays(-_sitemapXmlSettings.RebuildSitemapXMLAfterDays))
+            if (_nopFileProvider.FileExists(fullPath) && _nopFileProvider.GetLastWriteTimeUtc(fullPath) > DateTime.UtcNow.AddDays(-_sitemapXmlSettings.RebuildSitemapXmlAfterDays))
             {
                 return new SitemapXmlModel { SitemapXmlPath = fullPath };
             }
 
-            var model = new SitemapXmlModel();
-            using var stream = new MemoryStream();
-
             //execute task with lock
-            if (!_locker.PerformActionWithLock(fullPath, TimeSpan.FromSeconds(_sitemapXmlSettings.SitemapBuildOperationDelay), () => GenerateAsync(stream, id).GetAwaiter().GetResult()) || stream.Length == 0)
+            if (!await _locker.PerformActionWithLockAsync(fullPath, TimeSpan.FromSeconds(_sitemapXmlSettings.SitemapBuildOperationDelay), async () => await GenerateAsync(fullPath, id)))
                 throw new InvalidOperationException();
-
-            using var fileStream = File.Create(fullPath);
-            stream.Position = 0;
-            await stream.CopyToAsync(fileStream, 81920);
 
             return new SitemapXmlModel { SitemapXmlPath = fullPath };
         }

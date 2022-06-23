@@ -178,10 +178,10 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
             //#5570
             var sitemapXmlSettings = settingService.LoadSettingAsync<SitemapXmlSettings>().Result;
 
-            if (!settingService.SettingExistsAsync(sitemapXmlSettings, settings => settings.RebuildSitemapXMLAfterDays).Result)
+            if (!settingService.SettingExistsAsync(sitemapXmlSettings, settings => settings.RebuildSitemapXmlAfterDays).Result)
             {
-                sitemapXmlSettings.RebuildSitemapXMLAfterDays = 2;
-                settingService.SaveSettingAsync(sitemapXmlSettings, settings => settings.RebuildSitemapXMLAfterDays).Wait();
+                sitemapXmlSettings.RebuildSitemapXmlAfterDays = 2;
+                settingService.SaveSettingAsync(sitemapXmlSettings, settings => settings.RebuildSitemapXmlAfterDays).Wait();
             }
 
             if (!settingService.SettingExistsAsync(sitemapXmlSettings, settings => settings.SitemapBuildOperationDelay).Result)

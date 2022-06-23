@@ -255,7 +255,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             application.UseStaticFiles(new StaticFileOptions
             {
                 FileProvider = new PhysicalFileProvider(fileProvider.GetAbsolutePath(NopSeoDefaults.SitemapXmlDirectory)),
-                RequestPath = $"/{NopSeoDefaults.SitemapXmlDirectory}",
+                RequestPath = new PathString($"/{NopSeoDefaults.SitemapXmlDirectory}"),
                 OnPrepareResponse = context =>
                 {
                     if (!DataSettingsManager.IsDatabaseInstalled() ||

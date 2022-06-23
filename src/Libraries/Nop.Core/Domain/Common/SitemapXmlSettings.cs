@@ -66,7 +66,7 @@ namespace Nop.Core.Domain.Common
         /// <summary>
         /// Gets or sets a value indicating after which period of time the sitemap files will be rebuilt (in days)
         /// </summary>
-        public int RebuildSitemapXMLAfterDays { get; set;}
+        public int RebuildSitemapXmlAfterDays { get; set;}
 
         /// <summary>
         /// Gets or sets the wait time (in seconds) before the operation can be started again

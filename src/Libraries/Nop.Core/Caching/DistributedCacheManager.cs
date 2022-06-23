@@ -336,6 +336,38 @@ namespace Nop.Core.Caching
             }
         }
 
+        /// <summary>
+        /// Perform asynchronous action with exclusive in-memory lock
+        /// </summary>
+        /// <param name="resource">The key we are locking on</param>
+        /// <param name="expirationTime">The time after which the lock will automatically be expired</param>
+        /// <param name="action">Action to be performed with locking</param>
+        /// <returns>True if lock was acquired and action was performed; otherwise false</returns>
+        public async Task<bool> PerformActionWithLockAsync(string resource, TimeSpan expirationTime, Func<Task> action)
+        {
+            var key = new CacheKey(resource) { CacheTime = (int)expirationTime.TotalMinutes  };
+
+            //ensure that lock is acquired
+            var (isSet, _) = await TryGetItemAsync<object>(key);
+            if (isSet)
+                return false;
+
+            try
+            {
+                await SetAsync(key, true);
+
+                //perform action
+                await action();
+
+                return true;
+            }
+            finally
+            {
+                //release lock even if action fails
+                await RemoveAsync(key);
+            }
+        }
+
         #endregion
 
         #region Nested class
