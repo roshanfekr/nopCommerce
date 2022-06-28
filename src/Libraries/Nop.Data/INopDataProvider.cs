@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using LinqToDB.Data;
 using Nop.Core;
 using Nop.Data.Mapping;
 
@@ -220,7 +220,7 @@ namespace Nop.Data
         /// A task that represents the asynchronous operation
         /// The task result contains the number of records, affected by command execution.
         /// </returns>
-        Task<int> ExecuteNonQueryAsync(string sql, params DataParameter[] dataParameters);
+        Task<int> ExecuteNonQueryAsync(string sql, params DbParameter[] dataParameters);
 
         /// <summary>
         /// Executes command using System.Data.CommandType.StoredProcedure command type and
@@ -233,7 +233,7 @@ namespace Nop.Data
         /// A task that represents the asynchronous operation
         /// The task result contains the returns collection of query result records
         /// </returns>
-        Task<IList<T>> QueryProcAsync<T>(string procedureName, params DataParameter[] parameters);
+        Task<IList<T>> QueryProcAsync<T>(string procedureName, params DbParameter[] parameters);
 
         /// <summary>
         /// Executes command and returns results as collection of values of specified type
@@ -245,7 +245,7 @@ namespace Nop.Data
         /// A task that represents the asynchronous operation
         /// The task result contains the returns collection of query result records
         /// </returns>
-        Task<IList<T>> QueryAsync<T>(string sql, params DataParameter[] parameters);
+        Task<IList<T>> QueryAsync<T>(string sql, params DbParameter[] parameters);
 
         /// <summary>
         /// Truncates database table

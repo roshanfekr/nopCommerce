@@ -20,12 +20,6 @@ namespace Nop.Data.DataProviders
     /// </summary>
     public partial class MsSqlNopDataProvider : BaseDataProvider, INopDataProvider
     {
-        #region Fields
-
-        private static readonly Lazy<IDataProvider> _dataProvider = new(() => new SqlServerDataProvider(ProviderName.SqlServer, SqlServerVersion.v2012, SqlServerProvider.MicrosoftDataSqlClient), true);
-
-        #endregion
-
         #region Utils
 
         protected virtual SqlConnectionStringBuilder GetConnectionStringBuilder()
@@ -330,7 +324,7 @@ namespace Nop.Data.DataProviders
         /// <summary>
         /// Sql server data provider
         /// </summary>
-        protected override IDataProvider LinqToDbDataProvider => _dataProvider.Value;
+        protected override IDataProvider LinqToDbDataProvider => SqlServerTools.GetDataProvider(SqlServerVersion.v2012, SqlServerProvider.MicrosoftDataSqlClient);
 
         /// <summary>
         /// Gets allowed a limit input value of the data for hashing functions, returns 0 if not limited

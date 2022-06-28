@@ -33,39 +33,8 @@ namespace Nop.Tests
         //it's quite fast hash (to cheaply distinguish between objects)
         private const string HASH_ALGORITHM = "SHA1";
         private static DataConnection _dataContext;
-        private static readonly Lazy<IDataProvider> _dataProvider = new(() => new SQLiteDataProvider(ProviderName.SQLiteMS), true);
 
         private static readonly ReaderWriterLockSlim _locker = new();
-
-        #endregion
-
-        #region Utils
-
-        private static void UpdateOutputParameters(DataConnection dataConnection, DataParameter[] dataParameters)
-        {
-            if (dataParameters is null || dataParameters.Length == 0)
-                return;
-
-            foreach (var dataParam in dataParameters.Where(p => p.Direction == ParameterDirection.Output))
-                UpdateParameterValue(dataConnection, dataParam);
-        }
-
-        private static void UpdateParameterValue(DataConnection dataConnection, DataParameter parameter)
-        {
-            if (dataConnection is null)
-                throw new ArgumentNullException(nameof(dataConnection));
-
-            if (parameter is null)
-                throw new ArgumentNullException(nameof(parameter));
-
-            if (dataConnection.Command is IDbCommand command &&
-                command.Parameters.Count > 0 &&
-                command.Parameters.Contains(parameter.Name) &&
-                command.Parameters[parameter.Name] is IDbDataParameter param)
-            {
-                parameter.Value = param.Value;
-            }
-        }
 
         #endregion
 
@@ -90,7 +59,7 @@ namespace Nop.Tests
                 ? DataSettingsManager.LoadSettings().ConnectionString
                 : connectionString);
         }
-        
+
         /// <summary>
         /// Inserts record into table. Returns inserted entity with identity
         /// </summary>
@@ -328,7 +297,7 @@ namespace Nop.Tests
         /// <param name="procedureName">Procedure name</param>
         /// <param name="parameters">Command parameters</param>
         /// <returns>Returns collection of query result records</returns>
-        public override Task<IList<T>> QueryProcAsync<T>(string procedureName, params DataParameter[] parameters)
+        public override Task<IList<T>> QueryProcAsync<T>(string procedureName, params DbParameter[] parameters)
         {
             //stored procedure is not support by SqLite
             return Task.FromResult<IList<T>>(new List<T>());
@@ -341,7 +310,7 @@ namespace Nop.Tests
         /// <param name="sql">SQL command text</param>
         /// <param name="parameters">Parameters to execute the SQL command</param>
         /// <returns>Collection of values of specified type</returns>
-        public override Task<IList<T>> QueryAsync<T>(string sql, params DataParameter[] parameters)
+        public override Task<IList<T>> QueryAsync<T>(string sql, params DbParameter[] parameters)
         {
             using (new ReaderWriteLockDisposable(_locker, ReaderWriteLockType.Read))
                 return Task.FromResult<IList<T>>(DataContext.Query<T>(sql, parameters).ToList());
@@ -353,16 +322,12 @@ namespace Nop.Tests
         /// <param name="sql">Command text</param>
         /// <param name="dataParameters">Command parameters</param>
         /// <returns>Number of records, affected by command execution.</returns>
-        public override Task<int> ExecuteNonQueryAsync(string sql, params DataParameter[] dataParameters)
+        public override Task<int> ExecuteNonQueryAsync(string sql, params DbParameter[] dataParameters)
         {
             using (new ReaderWriteLockDisposable(_locker, ReaderWriteLockType.Read))
             {
-                var command = new CommandInfo(DataContext, sql, dataParameters);
-                var affectedRecords = command.Execute();
-
-                UpdateOutputParameters(DataContext, dataParameters);
-
-                return  Task.FromResult<int>(affectedRecords);
+                var command = CreateDbCommand(sql, dataParameters);
+                return command.ExecuteAsync();
             }
         }
 
@@ -393,33 +358,12 @@ namespace Nop.Tests
 
         #region Properties
 
-        protected DataConnection DataContext =>
-            _dataContext ??= new DataConnection(LinqToDbDataProvider, CreateDbConnection(), AdditionalSchema)
-            {
-                CommandTimeout = DataSettingsManager.GetSqlCommandTimeout()
-            };
-
-        /// <summary>
-        /// Additional mapping schema
-        /// </summary>
-        protected MappingSchema AdditionalSchema
-        {
-            get
-            {
-                if (Singleton<MappingSchema>.Instance is not null)
-                    return Singleton<MappingSchema>.Instance;
-
-                Singleton<MappingSchema>.Instance =
-                    new MappingSchema(ConfigurationName) { MetadataReader = new FluentMigratorMetadataReader(this) };
-
-                return Singleton<MappingSchema>.Instance;
-            }
-        }
+        protected DataConnection DataContext => _dataContext ??= CreateDataConnection();
 
         /// <summary>
         /// Linq2Db data provider
         /// </summary>
-        protected override IDataProvider LinqToDbDataProvider { get; } = _dataProvider.Value;
+        protected override IDataProvider LinqToDbDataProvider { get; } = SQLiteTools.GetDataProvider(ProviderName.SQLiteMS);
 
         /// <summary>
         /// Gets allowed a limit input value of the data for hashing functions, returns 0 if not limited
