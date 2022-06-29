@@ -531,7 +531,7 @@ namespace Nop.Web.Factories
                 }
             }
 
-            using var fileStream = _nopFileProvider.GetOfCreateFile(fullPath);
+            using var fileStream = _nopFileProvider.GetOrCreateFile(fullPath);
             stream.Position = 0;
             await stream.CopyToAsync(fileStream, 81920);
         }
@@ -763,14 +763,19 @@ namespace Nop.Web.Factories
             var fileName = string.Format(NopSeoDefaults.SitemapXmlFilePattern, store.Id, language.Id, id);
             var fullPath = _nopFileProvider.GetAbsolutePath(NopSeoDefaults.SitemapXmlDirectory, fileName);
 
-            if (_nopFileProvider.FileExists(fullPath) && _nopFileProvider.GetLastWriteTimeUtc(fullPath) > DateTime.UtcNow.AddDays(-_sitemapXmlSettings.RebuildSitemapXmlAfterDays))
+            if (_nopFileProvider.FileExists(fullPath) && _nopFileProvider.GetLastWriteTimeUtc(fullPath) > DateTime.UtcNow.AddHours(-_sitemapXmlSettings.RebuildSitemapXmlAfterHours))
             {
                 return new SitemapXmlModel { SitemapXmlPath = fullPath };
             }
 
             //execute task with lock
-            if (!await _locker.PerformActionWithLockAsync(fullPath, TimeSpan.FromSeconds(_sitemapXmlSettings.SitemapBuildOperationDelay), async () => await GenerateAsync(fullPath, id)))
+            if (!await _locker.PerformActionWithLockAsync(
+                fullPath,
+                TimeSpan.FromSeconds(_sitemapXmlSettings.SitemapBuildOperationDelay),
+                async () => await GenerateAsync(fullPath, id)))
+            {
                 throw new InvalidOperationException();
+            }
 
             return new SitemapXmlModel { SitemapXmlPath = fullPath };
         }

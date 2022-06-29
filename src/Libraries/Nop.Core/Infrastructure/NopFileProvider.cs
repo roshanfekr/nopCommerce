@@ -447,7 +447,7 @@ namespace Nop.Core.Infrastructure
         /// </summary>
         /// <param name="path">The path and name of the file to create</param>
         /// <returns>A <see cref="FileStream"/> that provides read/write access to the file specified in <paramref name="path"/></returns>
-        public FileStream GetOfCreateFile(string path)
+        public FileStream GetOrCreateFile(string path)
         {
             if (FileExists(path))
                 return File.Open(path, FileMode.Open, FileAccess.ReadWrite);

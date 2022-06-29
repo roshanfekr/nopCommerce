@@ -64,9 +64,9 @@ namespace Nop.Core.Domain.Common
         public List<string> SitemapCustomUrls { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating after which period of time the sitemap files will be rebuilt (in days)
+        /// Gets or sets a value indicating after which period of time the sitemap files will be rebuilt (in hours)
         /// </summary>
-        public int RebuildSitemapXmlAfterDays { get; set;}
+        public int RebuildSitemapXmlAfterHours { get; set;}
 
         /// <summary>
         /// Gets or sets the wait time (in seconds) before the operation can be started again

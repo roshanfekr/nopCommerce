@@ -251,7 +251,7 @@ namespace Nop.Core.Infrastructure
         /// </summary>
         /// <param name="path">The path and name of the file to create</param>
         /// <returns>A <see cref="FileStream"/> that provides read/write access to the file specified in <paramref name="path"/></returns>
-        FileStream GetOfCreateFile(string path);
+        FileStream GetOrCreateFile(string path);
 
         /// <summary>
         /// Retrieves the parent directory of the specified path

@@ -302,7 +302,7 @@ namespace Nop.Web.Controllers
         public virtual async Task<IActionResult> SitemapXml(int? id)
         {
             if (!_sitemapXmlSettings.SitemapXmlEnabled)
-                return Forbid();
+                return StatusCode(StatusCodes.Status403Forbidden);
 
             try
             {
