@@ -1,0 +1,8 @@
+﻿Group: Transfer Data
+FriendlyName: Hamkaran Transfer
+SystemName: Misc.Hamkaran
+Version: 1.0
+SupportedVersions: 3.70
+Author: nopCommerce team
+DisplayOrder: 1
+FileName: Nop.Plugin.Misc.Hamkaran.dll

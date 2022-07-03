@@ -1,0 +1,39 @@
+﻿@{
+    Layout = "";
+
+    var defaultGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
+    var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
+
+}
+@model HamkaranSettingModel
+@using Nop.Plugin.Misc.Hamkaran.Models;
+@using Nop.Web.Framework;
+@using Nop.Core.Infrastructure;
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "shipping-byweight-form" }))
+{
+    @Html.AntiForgeryToken()
+    <br />
+    <hr />
+    <br />
+    <table>
+        <tr>
+            <td class="adminTitle">
+                <strong>@T("Plugins.Shipping.ByWeight.Formula"):</strong>
+            </td>
+            <td class="adminData">
+                @T("Plugins.Shipping.ByWeight.Formula.Value")
+            </td>
+        </tr>
+    </table>
+    <br />
+    <hr />
+    <br />
+
+    <br />
+    <hr />
+    <br />
+
+    <br />
+    <hr />
+    <br />
+}
