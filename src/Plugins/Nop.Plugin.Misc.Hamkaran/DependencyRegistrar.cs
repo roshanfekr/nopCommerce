@@ -28,13 +28,13 @@ namespace Nop.Plugin.Misc.Hamkaran.ByWeight
             builder.RegisterType<HamkaranTransferService>().As<IHamkaranTransferService>().InstancePerLifetimeScope();
 
             //data context
-            this.RegisterPluginDataContext<HamkaranTransferObjectContext>(builder, "nop_object_context_shipping_weight_zip");
+            this.RegisterPluginDataContext<HamkaranTransferObjectContext>(builder, "nop_object_context_hamkaran_transfer_zip");
 
             ////override required repository with our custom context
-            //builder.RegisterType<EfRepository<ShippingByWeightRecord>>()
-            //    .As<IRepository<ShippingByWeightRecord>>()
-            //    .WithParameter(ResolvedParameter.ForNamed<IDbContext>("nop_object_context_shipping_weight_zip"))
-            //    .InstancePerLifetimeScope();
+            builder.RegisterType<EfRepository<HamkaranProductRecord>>()
+                .As<IRepository<HamkaranProductRecord>>()
+                .WithParameter(ResolvedParameter.ForNamed<IDbContext>("nop_object_context_hamkaran_transfer_zip"))
+                .InstancePerLifetimeScope();
         }
 
         /// <summary>

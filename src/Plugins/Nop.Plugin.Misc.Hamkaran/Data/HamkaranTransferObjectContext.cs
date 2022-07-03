@@ -18,7 +18,7 @@ namespace Nop.Plugin.Misc.Hamkaran.Data
         public HamkaranTransferObjectContext(string nameOrConnectionString)
             : base(nameOrConnectionString)
         {
-            //((IObjectContextAdapter) this).ObjectContext.ContextOptions.LazyLoadingEnabled = true;
+            ((IObjectContextAdapter) this).ObjectContext.ContextOptions.LazyLoadingEnabled = true;
         }
 
         #endregion
@@ -27,7 +27,7 @@ namespace Nop.Plugin.Misc.Hamkaran.Data
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            //modelBuilder.Configurations.Add(new ShippingByWeightRecordMap());
+            modelBuilder.Configurations.Add(new HamkaranProductRecordMap());
 
             //disable EdmMetadata generation
             //modelBuilder.Conventions.Remove<IncludeMetadataConvention>();
@@ -65,7 +65,7 @@ namespace Nop.Plugin.Misc.Hamkaran.Data
         public void Uninstall()
         {
             //drop the table
-            var tableName = this.GetTableName<ShippingByWeightRecord>();
+            var tableName = this.GetTableName<HamkaranProductRecord>();
             //var tableName = "ShippingByWeight";
             this.DropPluginTable(tableName);
         }
