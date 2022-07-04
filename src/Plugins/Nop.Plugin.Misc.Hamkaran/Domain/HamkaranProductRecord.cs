@@ -1,4 +1,5 @@
-using Nop.Core;
+﻿using Nop.Core;
+using System;
 
 namespace Nop.Plugin.Misc.Hamkaran.Domain
 {
@@ -8,63 +9,35 @@ namespace Nop.Plugin.Misc.Hamkaran.Domain
     public partial class HamkaranProductRecord : BaseEntity
     {
         /// <summary>
-        /// Gets or sets the store identifier
+        /// [کد کالا]
         /// </summary>
-        public int StoreId { get; set; }
+        public string Code { get; set; }
 
         /// <summary>
-        /// Gets or sets the warehouse identifier
+        /// کد قدیمی
         /// </summary>
-        public int WarehouseId { get; set; }
+        public string OldCode { get; set; }
 
         /// <summary>
-        /// Gets or sets the country identifier
+        /// [نام کالا]
         /// </summary>
-        public int CountryId { get; set; }
+        public string ProductName { get; set; }
 
         /// <summary>
-        /// Gets or sets the state/province identifier
+        /// [نام انگلیسی]
         /// </summary>
-        public int StateProvinceId { get; set; }
+        public string ProductEnName { get; set; }
 
         /// <summary>
-        /// Gets or sets the zip
+        /// زمان بروز رسانی
         /// </summary>
-        public string Zip { get; set; }
+        public DateTime LastUpdateTime { get; set; }
 
         /// <summary>
-        /// Gets or sets the shipping method identifier
+        /// فعال
         /// </summary>
-        public int ShippingMethodId { get; set; }
+        public bool Active { get; set; }
 
-        /// <summary>
-        /// Gets or sets the "from" value
-        /// </summary>
-        public decimal From { get; set; }
 
-        /// <summary>
-        /// Gets or sets the "to" value
-        /// </summary>
-        public decimal To { get; set; }
-
-        /// <summary>
-        /// Gets or sets the additional fixed cost
-        /// </summary>
-        public decimal AdditionalFixedCost { get; set; }
-
-        /// <summary>
-        /// Gets or sets the shipping charge percentage (of subtotal)
-        /// </summary>
-        public decimal PercentageRateOfSubtotal { get; set; }
-
-        /// <summary>
-        /// Gets or sets the shipping charge amount (per weight unit)
-        /// </summary>
-        public decimal RatePerWeightUnit { get; set; }
-
-        /// <summary>
-        /// Gets or sets the lower weight limit
-        /// </summary>
-        public decimal LowerWeightLimit { get; set; }
     }
 }

@@ -18,22 +18,35 @@
     <table>
         <tr>
             <td class="adminTitle">
-                <strong>@T("Plugins.Shipping.ByWeight.Formula"):</strong>
+                @Html.NopLabelFor(model => model.Enable):
             </td>
             <td class="adminData">
-                @T("Plugins.Shipping.ByWeight.Formula.Value")
+                @Html.EditorFor(model => model.Enable)
+                @Html.ValidationMessageFor(model => model.Enable)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.UpdateRecallPeriod):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.UpdateRecallPeriod)
+                @Html.ValidationMessageFor(model => model.UpdateRecallPeriod)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.ConnectionString):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.ConnectionString)
+                @Html.ValidationMessageFor(model => model.ConnectionString)
             </td>
         </tr>
     </table>
-    <br />
-    <hr />
-    <br />
+        <br />
+        <hr />
+        <br />
 
-    <br />
-    <hr />
-    <br />
 
-    <br />
-    <hr />
-    <br />
-}
+        }

@@ -11,5 +11,7 @@ namespace Nop.Plugin.Misc.Hamkaran.Models
         [NopResourceDisplayName("Plugins.Hamkaran.Config.UpdateRecallPeriod")]
         public int UpdateRecallPeriod { get; set; }
 
+        [NopResourceDisplayName("Plugins.Hamkaran.Config.ConnectionString")]
+        public string ConnectionString { get; set; }
     }
 }
