@@ -2,7 +2,9 @@
 using System.Web.Routing;
 using Nop.Core;
 using Nop.Core.Domain.Shipping;
+using Nop.Core.Domain.Tasks;
 using Nop.Core.Plugins;
+using Nop.Plugin.Misc.Hamkaran.Data;
 using Nop.Plugin.Misc.Hamkaran.Services;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
@@ -10,12 +12,14 @@ using Nop.Services.Configuration;
 using Nop.Services.Localization;
 using Nop.Services.Shipping;
 using Nop.Services.Shipping.Tracking;
+using Nop.Services.Tasks;
 
-namespace Nop.Plugin.Misc.Hamkaran.Data
+namespace Nop.Plugin.Misc.Hamkaran
 {
-    public class ByWeightShippingComputationMethod : BasePlugin, IMiscPlugin
+    public class HamkaranTransferPlugin : BasePlugin, IMiscPlugin
     {
         #region Fields
+        public static string ScheduleTaskType => "Nop.Plugin.Misc.Hamkaran.Services.HamkaranSchedule";
 
         private readonly IShippingService _shippingService;
         private readonly IStoreContext _storeContext;
@@ -24,13 +28,14 @@ namespace Nop.Plugin.Misc.Hamkaran.Data
         private readonly HamkaranSettings _hamkaranSettings;
         private readonly HamkaranTransferObjectContext _objectContext;
         private readonly ISettingService _settingService;
-
+        private readonly IScheduleTaskService _scheduleTaskService;
         #endregion
 
         #region Ctor
-        public ByWeightShippingComputationMethod(IShippingService shippingService,
+        public HamkaranTransferPlugin(IShippingService shippingService,
             IStoreContext storeContext,
             IHamkaranTransferService hamkaranTransferService,
+            IScheduleTaskService scheduleTaskService,
             IPriceCalculationService priceCalculationService,
             HamkaranSettings hamkaranSettings,
             HamkaranTransferObjectContext objectContext,
@@ -43,6 +48,20 @@ namespace Nop.Plugin.Misc.Hamkaran.Data
             this._hamkaranSettings = hamkaranSettings;
             this._objectContext = objectContext;
             this._settingService = settingService;
+            this._scheduleTaskService = scheduleTaskService;
+
+
+            if (_scheduleTaskService.GetTaskByType(ScheduleTaskType) == null)
+            {
+                _scheduleTaskService.InsertTask(new ScheduleTask
+                {
+                    Enabled = true,
+                    Seconds = 60 * 60,
+                    Name = "Hamkaran data transfer",
+                    Type = ScheduleTaskType,
+                });
+            }
+
         }
         #endregion
 
@@ -64,11 +83,12 @@ namespace Nop.Plugin.Misc.Hamkaran.Data
             _settingService.SaveSetting(settings);
 
 
+
             //database objects
             _objectContext.Install();
 
             //locales
-            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.Store", "Store");
+            //this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.Store", "Store");
             //this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.Store.Hint", "If an asterisk is selected, then this shipping rate will apply to all stores.");
             //this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.Warehouse", "Warehouse");
             //this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.Warehouse.Hint", "If an asterisk is selected, then this shipping rate will apply to all warehouses.");

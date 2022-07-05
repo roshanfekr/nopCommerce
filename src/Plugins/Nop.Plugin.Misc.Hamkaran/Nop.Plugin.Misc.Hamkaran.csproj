@@ -92,7 +92,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Data\HamkaranProductRecordMap.cs" />
-    <Compile Include="HamkaranTransferMethod.cs" />
+    <Compile Include="HamkaranTransferPlugin.cs" />
     <Compile Include="Data\EfStartUpTask.cs" />
     <Compile Include="HamkaranSettings.cs" />
     <Compile Include="Controllers\HamkaranTransferController.cs" />

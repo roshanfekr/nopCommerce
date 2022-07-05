@@ -32,7 +32,7 @@ namespace Nop.Plugin.Misc.Hamkaran.Services
         }
 
         private readonly HamkaranTransferService _hamkaranTransferService;
-        public HamkaranSchedule(HamkaranTransferService hamkaranTransferService )
+        public HamkaranSchedule(HamkaranTransferService hamkaranTransferService)
         {
             this._hamkaranTransferService = hamkaranTransferService;
 
@@ -91,7 +91,7 @@ namespace Nop.Plugin.Misc.Hamkaran.Services
                     {
                         if (hamkaranTransferRows.Where(x => x.Code == item.Code).Any())
                         {
-                            _hamkaranTransferService.InsertHamkaranProductRecord(
+                            _hamkaranTransferService.UpdateHamkaranProductRecord(
                                 new Domain.HamkaranProductRecord
                                 {
                                     Active = true,
@@ -100,11 +100,12 @@ namespace Nop.Plugin.Misc.Hamkaran.Services
                                     OldCode = item.OldCode,
                                     ProductEnName = item.EnName,
                                     ProductName = item.Name
-                                });
+                                }, item.Code);
+
                         }
                         else
                         {
-                            _hamkaranTransferService.UpdateHamkaranProductRecord(
+                            _hamkaranTransferService.InsertHamkaranProductRecord(
                                 new Domain.HamkaranProductRecord
                                 {
                                     Active = true,
