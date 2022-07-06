@@ -80,6 +80,8 @@ namespace Nop.Plugin.Misc.Hamkaran.Controllers
             //other settings
             model.Enable = _hamkaranSettings.Enable;
             model.UpdateRecallPeriod = _hamkaranSettings.UpdateRecallPeriod;
+            model.ConnectionString = _hamkaranSettings.ConnectionString;
+
 
             return View("~/Plugins/Misc.Hamkaran/Views/Configure.cshtml", model);
         }
@@ -91,6 +93,7 @@ namespace Nop.Plugin.Misc.Hamkaran.Controllers
             //save settings
             _hamkaranSettings.Enable = model.Enable;
             _hamkaranSettings.UpdateRecallPeriod = model.UpdateRecallPeriod;
+            _hamkaranSettings.ConnectionString = model.ConnectionString;
 
             _settingService.SaveSetting(_hamkaranSettings);
 

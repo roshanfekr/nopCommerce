@@ -1,4 +1,5 @@
 ﻿using Nop.Core.Domain.Tasks;
+using Nop.Services.Configuration;
 using Nop.Services.Tasks;
 using System;
 using System.Collections.Generic;
@@ -30,18 +31,21 @@ namespace Nop.Plugin.Misc.Hamkaran.Services
             public string ValueFeature { get; set; }
 
         }
-
-        private readonly HamkaranTransferService _hamkaranTransferService;
-        public HamkaranSchedule(HamkaranTransferService hamkaranTransferService)
+        private readonly ISettingService _settingService;
+        private readonly IHamkaranTransferService _hamkaranTransferService;
+        private readonly HamkaranSettings hamkaranSettings;
+        public HamkaranSchedule(IHamkaranTransferService hamkaranTransferService , ISettingService settingService)
         {
             this._hamkaranTransferService = hamkaranTransferService;
+            this._settingService = settingService;
+            hamkaranSettings = _settingService.LoadSetting<HamkaranSettings>();
 
         }
 
         private List<ImportProduct> GetDataFromDatabase()
         {
             string queryString = "select * from FakeProduct";
-            SqlConnection sqlConnection = new SqlConnection();
+            SqlConnection sqlConnection = new SqlConnection(hamkaranSettings.ConnectionString);
             var sqlCommand = sqlConnection.CreateCommand();
 
             sqlCommand.CommandType = CommandType.Text;
@@ -82,6 +86,9 @@ namespace Nop.Plugin.Misc.Hamkaran.Services
         {
             try
             {
+                if (!hamkaranSettings.Enable || string.IsNullOrEmpty(hamkaranSettings.ConnectionString))
+                    return;
+
                 var rows = GetDataFromDatabase();
                 if (rows.Count > 0)
                 {

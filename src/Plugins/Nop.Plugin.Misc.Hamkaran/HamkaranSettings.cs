@@ -8,5 +8,8 @@ namespace Nop.Plugin.Misc.Hamkaran
         public bool Enable { get; set; }
 
         public int UpdateRecallPeriod { get; set; }
+
+        public string ConnectionString { get; set; }
+
     }
 }
