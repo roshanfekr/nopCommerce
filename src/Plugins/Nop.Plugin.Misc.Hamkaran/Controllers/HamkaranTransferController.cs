@@ -74,6 +74,7 @@ namespace Nop.Plugin.Misc.Hamkaran.Controllers
         }
 
         [ChildActionOnly]
+        [AdminAuthorize]
         public ActionResult Configure()
         {
             var model = new HamkaranSettingModel();
@@ -88,6 +89,9 @@ namespace Nop.Plugin.Misc.Hamkaran.Controllers
 
         [HttpPost]
         [AdminAntiForgery]
+        [FormValueRequired("save")]
+        [AdminAuthorize]
+
         public ActionResult SaveGeneralSettings(HamkaranSettingModel model)
         {
             //save settings
@@ -100,6 +104,18 @@ namespace Nop.Plugin.Misc.Hamkaran.Controllers
             return Json(new { Result = true });
         }
 
+
+        [AdminAntiForgery]
+        [ChildActionOnly]
+        [FormValueRequired("testconnection")]
+        [AdminAuthorize]
+        public ActionResult Configure(HamkaranSettingModel model)
+        {
+
+            model.ConnectionOk = HamkaranSettingModel.ConnectionTest.TestOK;
+
+            return View("~/Plugins/Misc.Hamkaran/Views/Configure.cshtml", model);
+        }
 
     }
 }

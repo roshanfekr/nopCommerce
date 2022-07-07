@@ -5,7 +5,7 @@
     var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
 
 }
-@model HamkaranSettingModel
+@model Nop.Plugin.Misc.Hamkaran.Models.HamkaranSettingModel
 @using Nop.Plugin.Misc.Hamkaran.Models;
 @using Nop.Web.Framework;
 @using Nop.Core.Infrastructure;
@@ -40,7 +40,25 @@
             </td>
             <td class="adminData">
                 @Html.EditorFor(model => model.ConnectionString)
+                <input type="submit" name="testconnection" class="k-button" value="@T("Admin.Common.TestConnection")" />
+                @if ((int)Model.ConnectionOk == 0)
+                {
+    <span></span>                }
+                @if ((int)Model.ConnectionOk == 1)
+                {
+                    <span>Connected</span>
+                }
+                @if ((int)Model.ConnectionOk == 2)
+                {
+                    <span>Connection Faild</span>
+                }
                 @Html.ValidationMessageFor(model => model.ConnectionString)
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <input type="submit" name="save" class="k-button" value="@T("Admin.Common.Save")" />
+                <input type="submit" name="generate" class="k-button" value="@T("Plugins.Feed.Froogle.Generate")" />
             </td>
         </tr>
     </table>

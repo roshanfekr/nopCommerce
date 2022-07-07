@@ -88,6 +88,8 @@ namespace Nop.Plugin.Misc.Hamkaran
             _objectContext.Install();
 
             //locales
+            
+             this.AddOrUpdatePluginLocaleResource("Admin.Common.TestConnection", "تست اتصال");
             //this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.Store", "Store");
             //this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.Store.Hint", "If an asterisk is selected, then this shipping rate will apply to all stores.");
             //this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.Warehouse", "Warehouse");
@@ -118,7 +120,7 @@ namespace Nop.Plugin.Misc.Hamkaran
             //this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ByWeight.AddRecord", "Add record");
             //this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ByWeight.Formula", "Formula to calculate rates");
             //this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ByWeight.Formula.Value", "[additional fixed cost] + ([order total weight] - [lower weight limit]) * [rate per weight unit] + [order subtotal] * [charge percentage]");
-            
+
             base.Install();
         }
 
@@ -135,8 +137,8 @@ namespace Nop.Plugin.Misc.Hamkaran
 
             //locales
             //this.DeletePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.Store");
-            
-            
+            this.DeletePluginLocaleResource("Admin.Common.TestConnection");
+
             base.Uninstall();
         }
 
