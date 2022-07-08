@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Directory;
 using Nop.Plugin.Misc.Hamkaran.Domain;
+using Nop.Plugin.Misc.Hamkaran.Infrastructure;
 using Nop.Plugin.Misc.Hamkaran.Models;
 using Nop.Services.Configuration;
 using Nop.Services.Directory;
@@ -87,10 +88,10 @@ namespace Nop.Plugin.Misc.Hamkaran.Controllers
             return View("~/Plugins/Misc.Hamkaran/Views/Configure.cshtml", model);
         }
 
-        [HttpPost]
         [AdminAntiForgery]
         [FormValueRequired("save")]
         [AdminAuthorize]
+        [HttpPost, ActionName("Configure")]
 
         public ActionResult SaveGeneralSettings(HamkaranSettingModel model)
         {
@@ -101,21 +102,26 @@ namespace Nop.Plugin.Misc.Hamkaran.Controllers
 
             _settingService.SaveSetting(_hamkaranSettings);
 
-            return Json(new { Result = true });
+            return Configure();
         }
 
 
         [AdminAntiForgery]
-        [ChildActionOnly]
         [FormValueRequired("testconnection")]
         [AdminAuthorize]
+        [HttpPost, ActionName("Configure")]
+
         public ActionResult Configure(HamkaranSettingModel model)
         {
-
-            model.ConnectionOk = HamkaranSettingModel.ConnectionTest.TestOK;
+            if(Utils.TestConnection(model.ConnectionString))
+                model.ConnectionOk = HamkaranSettingModel.ConnectionTest.TestOK;
+            else
+                model.ConnectionOk = HamkaranSettingModel.ConnectionTest.TestFaild;
+            
 
             return View("~/Plugins/Misc.Hamkaran/Views/Configure.cshtml", model);
         }
+
 
     }
 }

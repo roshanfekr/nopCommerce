@@ -88,8 +88,14 @@ namespace Nop.Plugin.Misc.Hamkaran
             _objectContext.Install();
 
             //locales
-            
-             this.AddOrUpdatePluginLocaleResource("Admin.Common.TestConnection", "تست اتصال");
+
+            this.AddOrUpdatePluginLocaleResource("Admin.Common.TestConnection", "تست اتصال");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Hamkaran.Config.Enable", "وضعیت پلاگین");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Hamkaran.Config.UpdateRecallPeriod", "دروه زمانی اتصال به سرور(ثانیه)");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Hamkaran.Config.ConnectionString", "رشته اتصال به سرور");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Hamkaran.Config.TestConnection", "رشته اتصال به سرور");
+
+
             //this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.Store", "Store");
             //this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.Store.Hint", "If an asterisk is selected, then this shipping rate will apply to all stores.");
             //this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.Warehouse", "Warehouse");
@@ -138,7 +144,9 @@ namespace Nop.Plugin.Misc.Hamkaran
             //locales
             //this.DeletePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.Store");
             this.DeletePluginLocaleResource("Admin.Common.TestConnection");
-
+            this.DeletePluginLocaleResource("Plugins.Hamkaran.Config.Enable");
+            this.DeletePluginLocaleResource("Plugins.Hamkaran.Config.UpdateRecallPeriod");
+            this.DeletePluginLocaleResource("Plugins.Hamkaran.Config.ConnectionString");
             base.Uninstall();
         }
 
